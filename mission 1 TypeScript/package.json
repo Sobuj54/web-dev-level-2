@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only ./src/nullable-unknown-never.ts",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/module_3/type_assertion.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
