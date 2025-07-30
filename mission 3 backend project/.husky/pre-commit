@@ -1,4 +1,6 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
-npm lint:check
+npx tsc --noEmit
+npx eslint src/**/*.ts
+npx prettier --check src/**/*.ts
