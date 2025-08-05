@@ -17,8 +17,8 @@
   "license": "ISC",
   "type": "commonjs",
   "lint-staged": {
-    "**/*.{ts,js}": [
-      "eslint --config eslint.config.js --fix",
+    "src/**/*.{ts,js}": [
+      "eslint --fix",
       "prettier --write"
     ],
     "**/*.{json,md}": [
