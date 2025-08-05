@@ -1,4 +1,4 @@
-import * as tseslint from '@typescript-eslint/eslint-plugin';
+import tseslint from '@typescript-eslint/eslint-plugin';
 import * as parser from '@typescript-eslint/parser';
 import globals from 'globals';
 
@@ -20,6 +20,13 @@ export default [
     rules: {
       'no-unused-vars': 'error',
       'prefer-const': ['error', { ignoreReadBeforeAssign: true }],
+      '@typescript-eslint/no-explicit-any': [
+        'error',
+        {
+          fixToUnknown: false,
+          ignoreRestArgs: false,
+        },
+      ],
     },
   },
   {
