@@ -1,27 +1,41 @@
-import { NextFunction, Request, Response } from 'express';
+/* eslint-disable no-unused-vars */
+import { ErrorRequestHandler } from 'express';
 import ApiError from '../utils/ApiError';
-import { errorLogger } from '../shared/logger';
+import { logError } from '../shared/logger';
+import { IGenericError } from '../interfaces/error';
+import { mongooseValidationError } from '../utils/validationErrorHandler';
 import ApiResponse from '../utils/ApiResponse';
 
-const globalErrorHandler = (
-  err: unknown,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const error =
-    err instanceof ApiError
-      ? err
-      : new ApiError(500, (err as Error).message || 'Internal Server Error.');
+const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  let error: IGenericError;
 
-  errorLogger.error({
-    message: error.message,
-    statusCode: error.statusCode,
-  });
+  if (err instanceof ApiError) {
+    error = err;
+  } else if (err.name === 'ValidationError') {
+    error = mongooseValidationError(err);
+  } else {
+    error = {
+      message: err.message || 'Something went wrong',
+      statusCode: err.statusCode || 500,
+      error: err?.error,
+      stack: err?.stack,
+    };
+  }
 
-  return res
+  if (process.env.NODE_ENV !== 'development')
+    logError(error.message, error.statusCode);
+
+  res
     .status(error.statusCode)
-    .json(new ApiResponse(error.statusCode, null, error.message));
+    .json(
+      new ApiResponse(
+        error.statusCode,
+        null,
+        error.message,
+        error?.error,
+        process.env.NODE_ENV == 'development' ? error?.stack : ''
+      )
+    );
 };
 
 export default globalErrorHandler;

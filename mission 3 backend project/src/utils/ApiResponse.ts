@@ -1,22 +1,25 @@
 // utils/ApiResponse.ts
 
-export default class ApiResponse<T = unknown, E = unknown> {
+export default class ApiResponse {
   statusCode: number;
-  data: T | null;
-  message: string;
   success: boolean;
-  errors?: E[];
+  data: unknown;
+  message: string;
+  errors?: unknown;
+  stack?: string;
 
   constructor(
     statusCode: number,
-    data: T | null,
-    message: string = 'Success',
-    errors?: E[]
+    data: unknown = null,
+    message: string = '',
+    errors: unknown = [],
+    stack: string = ''
   ) {
     this.statusCode = statusCode;
     this.data = data;
     this.message = message;
     this.success = statusCode < 400;
     if (errors) this.errors = errors;
+    if (stack) this.stack = stack;
   }
 }

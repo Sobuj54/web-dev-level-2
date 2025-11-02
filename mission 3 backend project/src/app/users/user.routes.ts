@@ -5,4 +5,4 @@ const router = Router();
 
 router.route('/create-user').post(createUer);
 
-export default router;
+export const userRoutes = router;

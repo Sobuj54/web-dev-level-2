@@ -1,7 +1,7 @@
 import ApiError from '../../utils/ApiError';
 import { generateUserId } from './user.utils';
-import { IUser } from './users.interface';
-import { User } from './users.model';
+import { IUser } from './user.interface';
+import { User } from './user.model';
 
 const createUserService = async (user: IUser): Promise<IUser> => {
   const id = await generateUserId();

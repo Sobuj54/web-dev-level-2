@@ -1,21 +1,22 @@
 class ApiError extends Error {
-  statusCode: number;
-  message: string;
-  success: boolean;
-  errors: Array<string | Record<string, unknown>>;
+  public readonly statusCode: number;
+  public readonly success: boolean;
+  public readonly error: unknown;
 
   constructor(
     statusCode: number,
-    message: string = 'Something went wrong',
-    errors: Array<string | Record<string, unknown>> = [],
+    message = 'Something went wrong',
+    error: unknown = [],
     stack: string = ''
   ) {
     super(message);
+    // 👇 Ensures the correct prototype chain for instanceof checks
+    Object.setPrototypeOf(this, new.target.prototype);
+    this.name = this.constructor.name;
 
     this.statusCode = statusCode;
-    this.message = message;
     this.success = false;
-    this.errors = errors;
+    this.error = error;
 
     if (stack) {
       this.stack = stack;
