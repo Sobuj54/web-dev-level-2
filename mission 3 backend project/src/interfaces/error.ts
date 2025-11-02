@@ -1,5 +1,5 @@
 interface IGenericValidationError {
-  path: string;
+  path: string | PropertyKey;
   message: string;
 }
 

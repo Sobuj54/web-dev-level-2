@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { IGenericError, IGenericValidationError } from '../interfaces/error';
+import { ZodError } from 'zod';
 
 const mongooseValidationError = (
   err: mongoose.Error.ValidationError
@@ -16,4 +17,35 @@ const mongooseValidationError = (
   };
 };
 
-export { mongooseValidationError };
+const zodValidationError = (err: ZodError): IGenericError => {
+  const errors: IGenericValidationError[] = err.issues.map((i) => ({
+    path: i.path[i.path.length - 1],
+    message: i.message,
+  }));
+  return {
+    statusCode: 400,
+    message: 'Validation Error',
+    error: errors,
+    stack: err.stack,
+  };
+};
+
+export { mongooseValidationError, zodValidationError };
+
+/*
+err.issuses look like below:
+[
+  {
+    expected: 'string',
+    code: 'invalid_type',
+    path: [ 'user', 'role' ],
+    message: 'Invalid input: expected string, received undefined'
+  },
+  {
+    code: 'unrecognized_keys',
+    keys: [ 'rolex' ],
+    path: [ 'user' ],
+    message: 'Unrecognized key: "rolex"'
+  }
+]
+*/

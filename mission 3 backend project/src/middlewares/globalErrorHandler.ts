@@ -3,8 +3,12 @@ import { ErrorRequestHandler } from 'express';
 import ApiError from '../utils/ApiError';
 import { logError } from '../shared/logger';
 import { IGenericError } from '../interfaces/error';
-import { mongooseValidationError } from '../utils/validationErrorHandler';
+import {
+  mongooseValidationError,
+  zodValidationError,
+} from '../utils/validationErrorHandler';
 import ApiResponse from '../utils/ApiResponse';
+import { ZodError } from 'zod';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   let error: IGenericError;
@@ -13,6 +17,8 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     error = err;
   } else if (err.name === 'ValidationError') {
     error = mongooseValidationError(err);
+  } else if (err instanceof ZodError) {
+    error = zodValidationError(err);
   } else {
     error = {
       message: err.message || 'Something went wrong',

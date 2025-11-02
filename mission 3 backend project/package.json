@@ -46,6 +46,7 @@
     "mongoose": "^8.16.5",
     "ts-node-dev": "^2.0.0",
     "winston": "^3.17.0",
-    "winston-daily-rotate-file": "^5.0.0"
+    "winston-daily-rotate-file": "^5.0.0",
+    "zod": "^4.1.12"
   }
 }
