@@ -13,4 +13,15 @@ const dbConnection = async () => {
   }
 };
 
+export const disconnectDB = async () => {
+  if (mongoose.connection.readyState === 1) {
+    try {
+      await mongoose.disconnect();
+      logInfo('MongoDB disconnected gracefully');
+    } catch (err) {
+      logError('Error disconnecting MongoDB', err);
+    }
+  }
+};
+
 export default dbConnection;
