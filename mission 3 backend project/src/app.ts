@@ -7,14 +7,21 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-import { userRoutes } from './app/users/user.routes';
-app.use('/api/v1/users', userRoutes);
+import allRoutes from './routes/index';
+app.use('/api/v1', allRoutes);
 
 // ------------------- Not Found Handler -------------------
 // Forward 404 to error handler for consistency
 import ApiError from './utils/ApiError';
 app.use((req: Request, res: Response, next: NextFunction) => {
-  next(new ApiError(404, 'Route not found.'));
+  next(
+    new ApiError(404, 'Route not found.', [
+      {
+        path: req.originalUrl,
+        message: 'Route not found.',
+      },
+    ])
+  );
 });
 
 // ------------------- Centralized Error Handler -------------------

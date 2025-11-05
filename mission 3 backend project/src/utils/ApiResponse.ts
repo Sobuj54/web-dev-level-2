@@ -19,7 +19,7 @@ export default class ApiResponse {
     this.data = data;
     this.message = message;
     this.success = statusCode < 400;
-    if (errors) this.errors = errors;
+    if (!this.success) this.errors = errors;
     if (stack) this.stack = stack;
   }
 }
