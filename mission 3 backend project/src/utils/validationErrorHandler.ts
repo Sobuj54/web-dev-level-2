@@ -17,6 +17,20 @@ const mongooseValidationError = (
   };
 };
 
+const handleCastError = (err: mongoose.Error.CastError): IGenericError => {
+  const errors: IGenericValidationError[] = [
+    {
+      path: err.path,
+      message: 'Invalid Id',
+    },
+  ];
+  return {
+    statusCode: 400,
+    message: 'Cast Error',
+    error: errors,
+  };
+};
+
 const zodValidationError = (err: ZodError): IGenericError => {
   const errors: IGenericValidationError[] = err.issues.map((i) => ({
     path: i.path[i.path.length - 1],
@@ -30,7 +44,7 @@ const zodValidationError = (err: ZodError): IGenericError => {
   };
 };
 
-export { mongooseValidationError, zodValidationError };
+export { mongooseValidationError, zodValidationError, handleCastError };
 
 /*
 err.issuses look like below:

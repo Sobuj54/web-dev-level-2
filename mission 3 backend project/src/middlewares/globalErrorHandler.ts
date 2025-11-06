@@ -4,6 +4,7 @@ import ApiError from '../utils/ApiError';
 import { logError } from '../shared/logger';
 import { IGenericError } from '../interfaces/error';
 import {
+  handleCastError,
   mongooseValidationError,
   zodValidationError,
 } from '../utils/validationErrorHandler';
@@ -15,10 +16,18 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
   if (err instanceof ApiError) {
     error = err;
+    error.error = [
+      {
+        path: '',
+        message: err.message,
+      },
+    ];
   } else if (err.name === 'ValidationError') {
     error = mongooseValidationError(err);
   } else if (err instanceof ZodError) {
     error = zodValidationError(err);
+  } else if (err.name === 'CastError') {
+    error = handleCastError(err);
   } else {
     error = {
       message: err.message || 'Something went wrong',

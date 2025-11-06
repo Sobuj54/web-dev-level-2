@@ -1,6 +1,12 @@
 import { RequestHandler } from 'express';
 import { asyncHandler } from '../../utils/asyncHandler';
-import { allSemesters, createSemester } from './academicSemester.service';
+import {
+  allSemesters,
+  createSemester,
+  deleteASemester,
+  singleSemester,
+  updateASemester,
+} from './academicSemester.service';
 import ApiResponse from '../../utils/ApiResponse';
 import {
   filterOptionsType,
@@ -49,4 +55,35 @@ const getAllSemesters: RequestHandler = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, result, 'Fetched all semesters successfully.'));
 });
 
-export { createAcademicSemester, getAllSemesters };
+const getSingleSemester: RequestHandler = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const result = await singleSemester(id);
+  res
+    .status(200)
+    .json(new ApiResponse(200, result, 'Retrieved Semester successfully.'));
+});
+
+const updateSemester: RequestHandler = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { ...newData } = req.body;
+  const result = await updateASemester(id, newData);
+  res
+    .status(200)
+    .json(new ApiResponse(200, result, 'semester updated successfully.'));
+});
+
+const deleteSemester = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const result = await deleteASemester(id);
+  res
+    .status(200)
+    .json(new ApiResponse(200, result, 'Successfully deleted a semester.'));
+});
+
+export {
+  createAcademicSemester,
+  getAllSemesters,
+  getSingleSemester,
+  updateSemester,
+  deleteSemester,
+};
