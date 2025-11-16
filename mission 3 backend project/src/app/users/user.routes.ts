@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { createUer } from './user.controller';
+import { createStudent } from './user.controller';
 import { validateZodRequest } from '../../middlewares/zodValidationMiddleware';
 import { createUserSchema } from './user.validation';
 
 const router = Router();
 
 router
-  .route('/create-user')
-  .post(validateZodRequest(createUserSchema), createUer);
+  .route('/create-student')
+  .post(validateZodRequest(createUserSchema), createStudent);
 
 export const userRoutes = router;
