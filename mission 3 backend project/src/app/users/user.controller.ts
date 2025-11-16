@@ -4,7 +4,7 @@ import { asyncHandler } from '../../utils/asyncHandler';
 import ApiResponse from '../../utils/ApiResponse';
 
 const createUer: RequestHandler = asyncHandler(async (req, res) => {
-  const { user } = req.body;
+  const { ...user } = req.body;
   const result = await createUserService(user);
   res
     .status(200)

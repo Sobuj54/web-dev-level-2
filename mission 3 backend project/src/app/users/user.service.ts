@@ -1,10 +1,18 @@
 import ApiError from '../../utils/ApiError';
-import { generateUserId } from './user.utils';
+import { generateFacultyId, generateStudentId } from './user.utils';
 import { IUser } from './user.interface';
 import { User } from './user.model';
 
 const createUserService = async (user: IUser): Promise<IUser> => {
-  const id = await generateUserId();
+  const academicSemester = { year: '2026', code: '02' };
+  let id;
+  if (user.role == 'student') {
+    id = await generateStudentId(academicSemester);
+  } else if (user.role == 'faculty') {
+    id = await generateFacultyId();
+  } else {
+    id = await generateFacultyId();
+  }
   user.id = id;
 
   if (!user.password)
