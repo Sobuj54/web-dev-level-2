@@ -22,11 +22,9 @@ const LocalGuardianSchema = z.object({
 export const createUserSchema = z.object({
   password: z.string().optional(),
   student: z.object({
-    id: z.string().trim().min(1, 'Student ID is required'),
-
     name: z.string().trim(),
     gender: z.enum(GenderEnum),
-    dateOfBirth: z.date(),
+    dateOfBirth: z.string(),
 
     email: z.email().trim(),
     contactNo: z.string().trim(),

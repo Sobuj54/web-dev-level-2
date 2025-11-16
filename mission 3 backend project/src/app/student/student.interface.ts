@@ -33,7 +33,7 @@ export interface IStudent {
   id: string | Types.ObjectId;
   name: string;
   gender: Gender;
-  dateOfBirth: Date;
+  dateOfBirth: string;
   email: string;
   contactNo: string;
   emergencyContactNo: string;
