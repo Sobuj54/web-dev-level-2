@@ -7,6 +7,7 @@ export const studentSchema = new Schema<IStudent>(
       type: String,
       require: true,
       unique: true,
+      index: true,
     },
     name: {
       type: String,
@@ -20,7 +21,6 @@ export const studentSchema = new Schema<IStudent>(
       type: String,
       trim: true,
       lowercase: true,
-      index: true,
       match: [/^\S+@\S+\.\S+$/, 'Please fill a valid email address'],
     },
     contactNo: { type: String, trim: true },

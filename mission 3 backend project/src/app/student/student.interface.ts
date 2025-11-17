@@ -48,3 +48,10 @@ export interface IStudent {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type studentFilterOptionsType = {
+  searchTerm?: string;
+  id?: string;
+  email?: string;
+  name?: string;
+};
