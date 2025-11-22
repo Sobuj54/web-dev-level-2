@@ -14,6 +14,8 @@ import { IFaculty } from '../faculty/faculty.interface';
 import { Faculty } from '../faculty/faculty.model';
 import { IAdmin } from '../admin/admin.interface';
 import { Admin } from '../admin/admin.model';
+import { Department } from '../department/department.model';
+import { DepartmentDocument } from '../department/department.interface';
 
 const createAStudent = async (
   student: IStudent,
@@ -78,6 +80,15 @@ const createAFaculty = async (
   if (!user.password) {
     user.password = process.env.DEFAULT_FACULTY_PASSWORD as string;
   }
+
+  const department: DepartmentDocument | null = await Department.findOne({
+    title: faculty.academicDepartment,
+  });
+  if (!department) throw new ApiError(400, "can't create faculty.");
+
+  // ensure types match: use mongoose.Types.ObjectId
+  faculty.academicDepartment = department?._id as mongoose.Types.ObjectId;
+  faculty.academicFaculty = department.faculty as mongoose.Types.ObjectId;
 
   // set role
   user.role = 'faculty';

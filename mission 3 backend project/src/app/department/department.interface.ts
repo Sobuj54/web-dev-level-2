@@ -1,6 +1,8 @@
-import { Schema } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export interface IDepartment {
   title: string;
-  faculty: string | Schema.Types.ObjectId;
+  faculty: Types.ObjectId;
 }
+
+export type DepartmentDocument = IDepartment & Document;

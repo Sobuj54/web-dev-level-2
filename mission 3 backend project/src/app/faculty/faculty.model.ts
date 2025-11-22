@@ -47,7 +47,7 @@ const FacultySchema = new Schema<IFaculty, FacultyModel>(
     },
     academicDepartment: {
       type: Types.ObjectId,
-      ref: 'AcademicDepartment',
+      ref: 'Department',
       required: true,
     },
     designation: {
@@ -61,7 +61,6 @@ const FacultySchema = new Schema<IFaculty, FacultyModel>(
     academicFaculty: {
       type: Types.ObjectId,
       ref: 'AcademicFaculty',
-      required: true,
     },
   },
   {
