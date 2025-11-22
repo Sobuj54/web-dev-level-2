@@ -1,8 +1,14 @@
 import mongoose, { Schema } from 'mongoose';
-import { IUser, UserModelType } from './user.interface';
+import {
+  IUser,
+  IUserMethods,
+  UserDocument,
+  UserModelType,
+} from './user.interface';
 import bcrypt from 'bcrypt';
+import jwt, { Secret } from 'jsonwebtoken';
 
-const userSchema = new Schema<IUser, UserModelType>(
+const userSchema = new Schema<IUser, UserModelType, IUserMethods>(
   {
     id: {
       type: String,
@@ -16,6 +22,15 @@ const userSchema = new Schema<IUser, UserModelType>(
     password: {
       type: String,
       required: true,
+      select: false,
+    },
+    refreshToken: {
+      type: String,
+      select: false,
+    },
+    needsPasswordChange: {
+      type: Boolean,
+      default: true,
     },
     student: {
       type: Schema.Types.ObjectId,
@@ -33,7 +48,7 @@ const userSchema = new Schema<IUser, UserModelType>(
   { timestamps: true }
 );
 
-userSchema.pre('save', async function (next) {
+userSchema.pre<UserDocument>('save', async function (next) {
   if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(
@@ -42,5 +57,33 @@ userSchema.pre('save', async function (next) {
   );
   next();
 });
+
+userSchema.methods.isPasswordCorrect = async function (
+  password: string
+): Promise<boolean> {
+  return await bcrypt.compare(password, this.password);
+};
+
+userSchema.methods.generateAccessToken = function (): string {
+  return jwt.sign(
+    {
+      id: this._id?.toString(),
+      role: this.role,
+    },
+    process.env.ACCESS_TOKEN_SECRET as Secret,
+    { expiresIn: '30m' }
+  );
+};
+
+userSchema.methods.generateRefreshToken = function (): string {
+  return jwt.sign(
+    {
+      id: this._id?.toString(),
+      role: this.role,
+    },
+    process.env.REFRESH_TOKEN_SECRET as Secret,
+    { expiresIn: '7d' }
+  );
+};
 
 export const User = mongoose.model<IUser, UserModelType>('User', userSchema);
