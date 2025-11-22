@@ -5,6 +5,7 @@ import { academicFacultyRoutes } from '../app/academicFaculty/academicFaculty.ro
 import { departmentRoutes } from '../app/department/department.route';
 import { studentRoutes } from '../app/student/student.routes';
 import { FacultyRoutes } from '../app/faculty/faculty.routes';
+import { AdminRoutes } from '../app/admin/admin.routes';
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use('/academic-faculty', academicFacultyRoutes);
 router.use('/departments', departmentRoutes);
 router.use('/students', studentRoutes);
 router.use('/faculties', FacultyRoutes);
+router.use('/admins', AdminRoutes);
 
 export default router;

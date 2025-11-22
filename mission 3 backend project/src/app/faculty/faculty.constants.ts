@@ -15,9 +15,7 @@ export const facultySearchableFields = [
   'email',
   'contactNo',
   'emergencyContactNo',
-  'name.firstName',
-  'name.lastName',
-  'name.middleName',
+  'name',
 ];
 
 export const paginationFields = ['page', 'limit', 'sortBy', 'sortOrder'];
