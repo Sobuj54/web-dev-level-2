@@ -1,7 +1,7 @@
 import ApiResponse from '../../utils/ApiResponse';
 import { asyncHandler } from '../../utils/asyncHandler';
 import { cookieOptions } from './auth.constants';
-import { loginUser } from './auth.service';
+import { issueRefreshToken, loginUser } from './auth.service';
 
 const login = asyncHandler(async (req, res) => {
   const { ...data } = req.body;
@@ -14,4 +14,12 @@ const login = asyncHandler(async (req, res) => {
     );
 });
 
-export { login };
+const refreshToken = asyncHandler(async (req, res) => {
+  const { refreshToken } = req.cookies;
+  const accessToken = await issueRefreshToken(refreshToken);
+  res
+    .status(200)
+    .json(new ApiResponse(200, { accessToken }, 'logged in successfully'));
+});
+
+export { login, refreshToken };

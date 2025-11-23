@@ -6,6 +6,11 @@ import {
   createFacultyZodSchema,
   createUserSchema,
 } from './user.validation';
+import {
+  verifyAuthentication,
+  verifyAuthorization,
+} from '../../middlewares/auth.middlewares';
+import { USER_ROLE } from '../../enums/user';
 
 const router = Router();
 
@@ -14,7 +19,12 @@ router
   .post(validateZodRequest(createUserSchema), createStudent);
 router
   .route('/create-faculty')
-  .post(validateZodRequest(createFacultyZodSchema), createFaculty);
+  .post(
+    verifyAuthentication,
+    verifyAuthorization(USER_ROLE.ADMIN),
+    validateZodRequest(createFacultyZodSchema),
+    createFaculty
+  );
 router
   .route('/create-admin')
   .post(validateZodRequest(createAdminZodSchema), createAdmin);

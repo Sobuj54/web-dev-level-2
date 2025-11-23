@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ApiError from '../../utils/ApiError';
 import { IUser } from '../users/user.interface';
 import { User } from '../users/user.model';
 import { ILoginData } from './auth.interface';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const loginUser = async (
   data: ILoginData
@@ -35,4 +37,32 @@ const loginUser = async (
   };
 };
 
-export { loginUser };
+const issueRefreshToken = async (token: string): Promise<string> => {
+  let decodedToken: JwtPayload;
+  try {
+    decodedToken = jwt.verify(
+      token,
+      process.env.REFRESH_TOKEN_SECRET as string
+    ) as JwtPayload;
+    /*
+     decoded token format: 
+     {
+      id: '6921c041c223f20a5074da69',
+      role: 'faculty',
+      iat: 1763906815,
+      exp: 1764511615
+    }
+    */
+  } catch (error) {
+    throw new ApiError(401, 'Unauthorized', error);
+  }
+
+  const { id } = decodedToken;
+  const user = await User.findById(id);
+  if (!user) throw new ApiError(400, 'User not found.');
+
+  const accessToken = user.generateAccessToken();
+  return accessToken;
+};
+
+export { loginUser, issueRefreshToken };
