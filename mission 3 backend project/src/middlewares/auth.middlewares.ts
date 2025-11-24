@@ -13,7 +13,7 @@ export const verifyAuthentication = asyncHandler(async (req, res, next) => {
     process.env.ACCESS_TOKEN_SECRET as Secret
   ) as JwtPayload;
 
-  const user = await User.findById(decodedToken.id);
+  const user = await User.findById(decodedToken.id).select('+password');
   if (!user) throw new ApiError(401, 'Invalid user');
 
   req.user = user;

@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import ApiError from '../../utils/ApiError';
-import { IUser } from '../users/user.interface';
+import { IUser, UserDocument } from '../users/user.interface';
 import { User } from '../users/user.model';
-import { ILoginData } from './auth.interface';
+import { IChangePassword, ILoginData } from './auth.interface';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const loginUser = async (
@@ -65,4 +64,17 @@ const issueRefreshToken = async (token: string): Promise<string> => {
   return accessToken;
 };
 
-export { loginUser, issueRefreshToken };
+const passwordChange = async (
+  passwordData: IChangePassword,
+  user: UserDocument
+): Promise<void> => {
+  const { oldPassword, newPassword } = passwordData;
+  const isCorrect = await user.isPasswordCorrect(oldPassword);
+  if (!isCorrect) throw new ApiError(401, 'invalid password.');
+
+  user.password = newPassword;
+  user.needsPasswordChange = false;
+  await user.save();
+};
+
+export { loginUser, issueRefreshToken, passwordChange };
